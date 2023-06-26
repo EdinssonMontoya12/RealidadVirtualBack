@@ -1,0 +1,136 @@
+﻿@using RealidadVirtualServer.Data;
+@using System.Net.Http.Headers;
+@inject IHttpClientFactory factory
+@inject NavigationManager _navigationManager
+
+<div class="modal @ModalClass" tabindex="-1" style="display:@ModalDisplay">
+    <div class="modal-dialog  modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5">Insertar herramienta</h5>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@herramienta">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" @bind-value="herramienta.Nombre" id="exampleFormControlInput1" placeholder="Titulo" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Selecciona una imagen</label>
+                                <InputFile OnChange="@LoadFile" class="form-control" id="formFile" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                            <InputTextArea maxlength="1000" class="form-control" @bind-Value="herramienta.Descripcion" id="exampleFormControlTextarea1" rows="3"></InputTextArea>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">URL</label>
+                                <input type="text" class="form-control" @bind-value="herramienta.Enlace" id="exampleFormControlInput1" placeholder="Titulo" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Precio</label>
+                                <input type="text" class="form-control" @bind-value="herramienta.Precio" id="exampleFormControlInput1" placeholder="Titulo" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" @bind-value="herramienta.DePaga" type="checkbox" id="flexCheckIndeterminate">
+                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                    De paga
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" @onclick="Guardar" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+
+    public Guid Guid = Guid.NewGuid();
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+    public HerammientumCreate herramienta = new HerammientumCreate();
+    private const int tamanioMaximo = 1024 * 1024 * 3;
+    IBrowserFile file = null;
+
+    public void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+    public async void Guardar()
+    {
+        if(file != null)
+        {
+            string fileName = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+
+            using var stream = file.OpenReadStream(tamanioMaximo);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+
+            herramienta.Imagen = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        }
+
+        var body = JsonConvert.SerializeObject(herramienta);
+
+        var buffer = System.Text.Encoding.UTF8.GetBytes(body);
+        var byteContent = new ByteArrayContent(buffer);
+        byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        var client = factory.CreateClient("api");
+        var response = await client.PostAsync("Herramientas", byteContent);
+        var content = await response.Content.ReadAsStringAsync();
+        Close();
+        _navigationManager.NavigateTo("/herramientas", true);
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        file = e.GetMultipleFiles().FirstOrDefault();
+    }
+
+}

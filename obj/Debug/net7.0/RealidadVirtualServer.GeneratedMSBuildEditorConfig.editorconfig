@@ -1,0 +1,77 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = RealidadVirtualServer
+build_property.RootNamespace = RealidadVirtualServer
+build_property.ProjectDir = E:\Semestre 9\Seminario Integrador\RealidadVirtualServer\
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = E:\Semestre 9\Seminario Integrador\RealidadVirtualServer
+build_property._RazorSourceGeneratorDebug = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Componentes/HerramientaModal.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50ZXNcSGVycmFtaWVudGFNb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Componentes/Loading.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50ZXNcTG9hZGluZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Componentes/Modal.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50ZXNcTW9kYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Componentes/TarjetaHerramienta.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50ZXNcVGFyamV0YUhlcnJhbWllbnRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Componentes/TarjetaLenguaje.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50ZXNcVGFyamV0YUxlbmd1YWplLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Herramientas.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSGVycmFtaWVudGFzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/LenguajeVer.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGVuZ3VhamVWZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8lxrgdapct
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-5jofbuzacd
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Semestre 9/Seminario Integrador/RealidadVirtualServer/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 

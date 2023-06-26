@@ -1,0 +1,96 @@
+﻿@page "/herramientas"
+
+@using RealidadVirtualServer.Data;
+@inject IHttpClientFactory factory
+@inject IJSRuntime js
+
+<PageTitle>Herramientas</PageTitle>
+
+<div class="row">
+
+    <div class="col-4">
+        <h1>Lenguajes</h1>
+    </div>
+
+    @if(logged)
+    {
+        <div class="col-4 offset-md-4">
+            <button class="btn btn-success" @onclick="() => Modal.Open()">Agregar herramienta</button>
+        </div>
+    }
+
+</div>
+
+Aca podras encontrar todos las herramienta tanto pagas como gratuitas disponibles para el desarrollo de juegos en realidad virtual
+
+@if(herramientas != null && herramientas.Count > 0)
+{
+    <h3 style="margin-top:15px">Gratuitas</h3>
+
+    <div class="row row-cols-auto justify-content-center" style="margin-top:15px">
+        @foreach(HerammientumConsultar h in herramientas)
+        {
+            if(!h.DePaga)
+            {
+                <TarjetaHerramienta herramienta="@h" />
+            }
+        }
+    </div>
+
+
+    <h3 style="margin-top:15px">De paga</h3>
+
+    <div class="row row-cols-auto justify-content-center" style="margin-top:15px">
+        @foreach(HerammientumConsultar h in herramientas)
+        {
+            if(h.DePaga)
+            {
+                <TarjetaHerramienta herramienta="@h" />
+            }
+        }
+    </div>
+}
+else
+{
+    <h2>No se encontraron resultados</h2>
+}
+
+<HerramientaModal @ref="Modal"></HerramientaModal>
+
+@code {
+    private HerramientaModal Modal { get; set; }
+}
+
+@code {
+    public string img = "image/val_img.png";
+    public List<HerammientumConsultar> herramientas = null;
+    public bool logged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = factory.CreateClient("api");
+            var response = await client.GetAsync("Herramientas/All");
+            var content = await response.Content.ReadAsStringAsync();
+
+            herramientas = JsonConvert.DeserializeObject<List<HerammientumConsultar>>(content);
+        }
+        catch(Exception e)
+        {
+
+        }
+    }    
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var log = await js.InvokeAsync<string>("readLocalStorage", "Logged");
+            logged = log != null ? Convert.ToBoolean(log) : false;
+            StateHasChanged();
+        }
+    }
+
+}
+

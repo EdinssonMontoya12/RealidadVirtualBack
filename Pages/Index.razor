@@ -1,0 +1,81 @@
+﻿@page "/lenguajes"
+
+@using RealidadVirtualServer.Data;
+@inject IHttpClientFactory factory
+@inject IJSRuntime js
+
+<PageTitle>Lenguajes</PageTitle>
+
+<div class="row">
+
+    <div class="col-4">
+        <h1>Lenguajes</h1>
+    </div>
+
+    @if(logged)
+    {
+        <div class="col-4 offset-md-4">
+            <button class="btn btn-success" @onclick="() => Modal.Open()">Agregar lenguajes</button>
+        </div>
+    }
+
+</div>
+
+Aca podras encontrar todos los lenguajes disponibles para el desarrollo de juegos en realidad virtual
+
+<div class="row row-cols-auto justify-content-center" style="margin-top:15px">
+
+    @if(lenguajes != null && lenguajes.Count > 0)
+    {
+        foreach(LenguajeConsultar l in lenguajes)
+        {
+            <TarjetaLenguaje Title="@l.Titulo" Descripcion="@l.Descripcion" Img="@l.Imagen" Id="@l.Lenguajeid" />
+        }
+    }
+    else
+    {
+        <h2>No se encontraron resultados</h2>
+    }
+
+</div>
+
+<Modal @ref="Modal"></Modal>
+
+@code {
+    private Modal Modal { get; set; }
+}
+
+@code {
+    public string img = "image/val_img.png";
+    public List<LenguajeConsultar> lenguajes = null;
+
+    public bool logged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = factory.CreateClient("api");
+            var response = await client.GetAsync("Lenguajes/All");
+            var content = await response.Content.ReadAsStringAsync();
+
+            lenguajes = JsonConvert.DeserializeObject<List<LenguajeConsultar>>(content);
+
+        }catch(Exception e)
+        {
+            
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var log = await js.InvokeAsync<string>("readLocalStorage", "Logged");
+            logged = log != null ? Convert.ToBoolean(log) : false;
+            StateHasChanged();
+        }
+    }
+
+}
+

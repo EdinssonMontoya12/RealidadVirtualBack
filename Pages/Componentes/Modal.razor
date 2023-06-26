@@ -1,0 +1,160 @@
+﻿@using RealidadVirtualServer.Data;
+@using System.Net.Http.Headers;
+@inject IHttpClientFactory factory
+@inject NavigationManager _navigationManager
+
+<div class="modal @ModalClass" tabindex="-1" style="display:@ModalDisplay">
+    <div class="modal-dialog  modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5">Insertar lenguaje</h5>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@lenguaje">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Titulo</label>
+                                <input type="text" class="form-control" @bind-value="lenguaje.Titulo" id="exampleFormControlInput1" placeholder="Titulo"/>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Selecciona una imagen</label>
+                                <InputFile OnChange="@LoadFile" class="form-control" id="formFile"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                            <InputTextArea class="form-control" @bind-Value="lenguaje.Descripcion" id="exampleFormControlTextarea1" rows="3"></InputTextArea>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left: 10px; margin-right:10px">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">URL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(AnexoCreate a in lenguaje.Anexos)
+                                {
+                                    <tr>                                        
+                                        <td>@a.Descripcion</td>
+                                        <td>@a.Url</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-5 mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" @bind-value="anexo.Descripcion" id="exampleFormControlInput1" placeholder="Descripcion" />
+                        </div>
+                        <div class="col-5 mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">URL</label>
+                            <input type="url" class="form-control" @bind-value="anexo.Url" id="exampleFormControlInput1" placeholder="URL" />
+                        </div>
+                        <div class="col-2 mb-3">
+                            <label for="exampleFormControlInput1" class="form-label"></label>
+                            <button type="button" @onclick="AgregarAnexo" class="btn btn-primary"><span class="oi oi-document" aria-hidden="true"></span></button>
+                        </div>
+                    </div>
+
+
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" @onclick="Guardar" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+
+    public Guid Guid = Guid.NewGuid();
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+    public LenguajeCreate lenguaje = new LenguajeCreate();
+    public AnexoCreate anexo = new AnexoCreate();
+    private const int tamanioMaximo = 1024 * 1024 * 3;
+    IBrowserFile file = null;
+
+    public void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+    public async void Guardar()
+    {
+        if(file != null)
+        {
+            string fileName = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+
+            using var stream = file.OpenReadStream(tamanioMaximo);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+
+            lenguaje.Imagen = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        }
+
+        var body = JsonConvert.SerializeObject(lenguaje);
+
+        var buffer = System.Text.Encoding.UTF8.GetBytes(body);
+        var byteContent = new ByteArrayContent(buffer);
+        byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        var client = factory.CreateClient("api");
+        var response = await client.PostAsync("Lenguajes", byteContent);
+        var content = await response.Content.ReadAsStringAsync();
+        Close();
+        _navigationManager.NavigateTo("/lenguajes", true);
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        file = e.GetMultipleFiles().FirstOrDefault();
+    }
+
+    public void AgregarAnexo()
+    {
+        lenguaje.Anexos.Add(new AnexoCreate()
+        {
+            Descripcion = anexo.Descripcion,
+            Url = anexo.Url
+        });
+
+        anexo.Url = "";
+        anexo.Descripcion = "";
+    }
+
+}

@@ -1,0 +1,76 @@
+﻿@inject IHttpClientFactory factory
+@inject NavigationManager _navigationManager
+@inject IJSRuntime js
+
+<link rel="stylesheet" href="/css/TarjetaLenguajeStyle.css" />
+
+<div class="col-4 col-md-4">
+    <div class="row">
+        <div id="imgContainer" class="col-12 col-md-12">
+            <img src="@Img" />
+        </div>
+    </div>
+
+    <div id="titleContainer" class="row">
+        <div class="col-6 col-md-6">
+            <b>@Title</b>
+        </div>
+    </div>
+
+    <div id="descriptionContainer" class="row">
+        <div class="col-12 col-md-12">
+            <p>
+                @Descripcion
+            </p>
+        </div>
+    </div>
+
+    <div id="buttonContainer" class="row">
+        <div class="col-4 col-md-4">
+            <button type="button" @onclick="leerMas" class="btn btn-primary">Leer mas</button>
+        </div>
+        @if(logged)
+        {
+            <div class="col-4 col-md-4">
+                <button type="button" @onclick="EliminarLenguaje" class="btn btn-danger">Eliminar</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+    [Parameter]
+    public string? Descripcion { get; set; }
+    [Parameter]
+    public string? Img { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+    public bool logged { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var log = await js.InvokeAsync<string>("readLocalStorage", "Logged");
+            logged = log != null ? Convert.ToBoolean(log) : false;
+            StateHasChanged();
+        }
+    }
+
+    public async void EliminarLenguaje()
+    {
+        var client = factory.CreateClient("api");
+        var response = await client.DeleteAsync($"Lenguajes?id={Id}");
+        var content = await response.Content.ReadAsStringAsync();
+
+        _navigationManager.NavigateTo("/lenguajes", true);
+    }
+
+    public void leerMas()
+    {
+        _navigationManager.NavigateTo($"/lenguaje_ver/{Id}", true);
+    }
+}

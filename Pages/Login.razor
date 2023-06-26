@@ -1,0 +1,73 @@
+﻿@page "/"
+
+@inject IJSRuntime js
+
+<link rel="stylesheet" href="/css/LoginCSS.css" />
+<div class="login-wrap">
+    <div class="login-html">
+        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Iniciar</label>
+        <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab"></label>
+        <div class="login-form">
+            <div class="sign-in-htm">
+
+                @if(logged)
+                {
+                    <label class="tab">Ya ha iniciado sesion</label>
+
+                    <div class="group">
+                        <input type="button" @onclick="LogOut" class="button" value="Salir">
+                    </div>
+                }
+                else
+                {
+                    <div class="group">
+                        <label for="user" class="label">Nombre de usuario</label>
+                        <input id="user" @bind-value="user" type="text" class="input">
+                    </div>
+                    <div class="group">
+                        <label for="pass" class="label">Contraseña</label>
+                        <input id="pass" @bind-value="pw" type="password" class="input" data-type="password">
+                    </div>
+                    <div class="group">
+                        <input type="button" @onclick="Log" class="button" value="Sign In">
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public string user { get; set; }
+    public string pw { get; set; }
+    public bool logged { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)    
+    {
+        if(firstRender)
+        {
+            var log = await js.InvokeAsync<string>("readLocalStorage", "Logged");
+            logged = log != null ? Convert.ToBoolean(log) : false;
+            StateHasChanged();
+        }
+    }
+
+    public async void Log()
+    {
+        if(user.Equals("ADMIN") && pw.Equals("12345"))
+        {
+            await js.InvokeVoidAsync("addLocalStorage", "Logged", true);
+            logged = true;
+            StateHasChanged();
+        }
+    }
+
+    public async void LogOut()
+    {
+            await js.InvokeVoidAsync("addLocalStorage", "Logged", false);
+            logged = false;
+            StateHasChanged();
+    }
+
+}

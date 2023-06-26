@@ -1,0 +1,31 @@
+﻿img {
+    object-fit: cover;
+    width: 100%;
+    max-height: 270px;
+    overflow: hidden;
+    height: 270px;
+}
+
+p {
+    font-size: 20px;
+    text-justify: inherit;       
+}
+
+#descriptionContainer {
+    overflow: auto;
+    max-height: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#titleContainer {
+    overflow:hidden;
+    max-height: 40px;
+    font-size: 30px;
+    align-items: start|center;
+}
+
+#buttonContainer {
+    height: 30px;
+    margin-bottom: 15px;
+}
